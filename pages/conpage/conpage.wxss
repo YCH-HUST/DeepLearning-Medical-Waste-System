@@ -1,0 +1,73 @@
+/* pages/conpage/conpage.wxss */
+.container {  
+  display: flex;  
+  flex-direction: column;  
+  align-items: center;  
+  padding: 20rpx; 
+  padding-bottom: 100rpx; 
+}  
+  
+.header {  
+  display: flex;  
+  align-items: center;  
+  margin-bottom: 20rpx;  
+}  
+  
+.patient-blocks {  
+  display: flex;  
+  justify-content: space-between;  
+  width: 100%; /* 确保一行显示 */  
+  padding: 0 10rpx; /* 根据需要添加左右内边距 */  
+  flex-wrap: nowrap; /* 防止换行 */  
+  overflow-x: auto; /* 允许水平滚动，如果方块太多 */  
+}  
+  
+.patient {  
+  width: 22%; /* 四个方块，所以设置宽度为25%，留一些间隙 */  
+  aspect-ratio: 1; /* 保持正方形 */  
+  display: flex;  
+  flex-direction: column;  
+  align-items: center;  
+  justify-content: center;  
+  padding: 10rpx;  
+  box-sizing: border-box; /* 确保内边距不会增加元素的总尺寸 */  
+  margin-right: 4%; /* 方块之间的间隙 */  
+  text-align: center; /* 确保文本居中 */  
+  border-radius: 10rpx; /* 添加圆角 */  
+}  
+  
+.patient:last-child {  
+  margin-right: 0; /* 最后一个方块不需要右边距 */  
+}  
+  
+.drip-speed {  
+  font-size: 14px; /* 根据需要调整字体大小 */  
+  line-height: 2; /* 确保文本可读性 */  
+  background-color: #FFFFFF; /* 设置滴注速度的背景颜色 */  
+  /* 可以添加padding、border等其他样式来美化背景 */  
+  padding: 2px 4px; /* 例如，添加一些内边距 */  
+  border-radius: 4px; /* 圆角效果 */  
+}  
+  
+.bed-number {  
+  font-size: 14px; /* 根据需要调整字体大小 */  
+  line-height: 1.5; /* 确保文本可读性 */  
+  background-color: transparent; /* 显式设置背景颜色为透明，确保没有背景 */  
+}
+
+.title{
+	margin-top: 50rpx;
+	padding: 50rpx;
+	text-align: center;
+  font-size: larger;
+  background-color: wheat;
+}
+
+.value{
+	padding: 150rpx;
+	margin-top: 100rpx;
+	align-items: center;
+	text-align: center;
+}
+
+

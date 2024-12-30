@@ -1,0 +1,26 @@
+<!--pages/conpage/conpage.wxml-->
+<view class="title">智能中药柜——中药环境智能监测系统</view>
+<view class="title" style="margin-top: 0;font-size: 50rpx;">调试页面</view>
+<view class="container" style="margin-top: 50rpx;">
+  <view class="data-item">
+    <text>红外状态: {{infraredStatus}}</text>
+  </view>
+  <view class="data-item">
+    <text>麦克风值: {{microphoneValue}}</text>
+  </view>
+  <view class="data-item">
+    <text>烟雾值: {{smokeValue}}</text>
+  </view>
+  <view class="data-item">
+    <text>雨滴值: {{rainValue}}</text>
+  </view>
+  <view class="data-item">
+    <text>距离: {{distanceValue}} cm</text>
+  </view>
+  <view class="data-item">
+    <text>温度: {{temperatureValue}} °C</text>
+  </view>
+  <view class="data-item">
+    <text>湿度: {{humidityValue}} %</text>
+  </view>
+</view>
