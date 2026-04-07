@@ -6,7 +6,7 @@
   ],
   "window": {
     "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "BLE连接页面",
+    "navigationBarTitleText": "医境智控",
     "navigationBarBackgroundColor": "#ffffff"
   },
   "style": "v2",
