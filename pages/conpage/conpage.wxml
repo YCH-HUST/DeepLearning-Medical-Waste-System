@@ -113,16 +113,20 @@
         <!-- AI智能分类 -->
         <view class="section">
           <view class="section-title">图片上传识别</view>
-          <view class="upload-card">
+          <view class="upload-card {{isRecognizing ? 'scanning-mode' : ''}}">
             <view wx:if="{{!previewImage}}" class="upload-header">
-              <text class="upload-icon">📷</text>
-              <text class="upload-title">上传图片进行智能识别</text>
+              <text class="upload-icon">📸</text>
+              <text class="upload-title">点击此处上传图片</text>
+              <text class="upload-subtitle">支持医疗废弃物智能AI识别</text>
             </view>
-            <image wx:if="{{previewImage}}" src="{{previewImage}}" mode="aspectFit" class="preview-img-wide"/>
+            <view class="preview-container" wx:if="{{previewImage}}">
+              <image src="{{previewImage}}" mode="aspectFit" class="preview-img-wide"/>
+              <view class="cyber-scanner" wx:if="{{isRecognizing}}"></view>
+            </view>
             <view class="upload-btn-group">
-              <button wx:if="{{!previewImage}}" class="upload-btn" bindtap="chooseImage">点击上传图片</button>
-              <button wx:if="{{previewImage}}" class="recognize-btn" bindtap="startRecognition">开始识别</button>
-              <button wx:if="{{previewImage}}" class="clear-btn" bindtap="clearImage">清除图片</button>
+              <button wx:if="{{!previewImage}}" class="upload-btn" bindtap="chooseImage">上传图片</button>
+              <button wx:if="{{previewImage}}" class="recognize-btn {{isRecognizing ? 'loading-btn' : ''}}" bindtap="startRecognition">{{isRecognizing ? '运算中...' : '开始识别'}}</button>
+              <button wx:if="{{previewImage && !isRecognizing}}" class="clear-btn" bindtap="clearImage">清除图片</button>
             </view>
           </view>
         </view>
@@ -192,7 +196,10 @@
           <view class="status-grid">
             <view class="status-item">
               <text class="status-label">连接状态</text>
-              <text class="status-value connected">{{connectionStatus}}</text>
+              <view class="status-value-group">
+                <view class="status-dot {{deviceConnected ? 'dot-active' : ''}}"></view>
+                <text class="status-value {{deviceConnected ? 'connected' : ''}}">{{connectionStatus}}</text>
+              </view>
             </view>
             <view class="status-item">
               <text class="status-label">上次同步</text>
@@ -205,7 +212,9 @@
         <view class="control-card modern">
           <view class="control-header">
             <view class="control-title-group">
-              <text class="control-icon">💨</text>
+              <view class="fan-icon-box">
+                <text class="control-icon {{fanOn ? 'fan-spin' : ''}}">🌀</text>
+              </view>
               <text class="control-title">环境风扇</text>
             </view>
             <switch checked="{{fanOn}}" bindchange="toggleFan" color="#4caf50"/>
@@ -269,7 +278,7 @@
         <view class="control-card">
           <view class="control-header">
             <text class="control-title">手动精细调节</text>
-            <view class="rgb-preview" style="background-color: rgb({{redValue}}, {{greenValue}}, {{blueValue}})"></view>
+            <view class="rgb-preview glow" style="background-color: rgb({{redValue}}, {{greenValue}}, {{blueValue}}); box-shadow: 0 0 24rpx 4rpx rgba({{redValue}}, {{greenValue}}, {{blueValue}}, 0.6);"></view>
           </view>
           <view class="rgb-controls" catchtouchstart="disablePageSwipe" catchtouchend="enablePageSwipe">
             <view class="slider-container">

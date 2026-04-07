@@ -1052,9 +1052,10 @@ Page({
     const filePath = this.data.tempFilePath;
     if (!filePath) return;
     wx.showLoading({
-      title: '识别中',
+      title: '云端运算中',
       mask: true
     });
+    this.setData({ isRecognizing: true });
     wx.uploadFile({
       url: 'http://8.137.77.70:10000/classify',
       filePath: filePath,
@@ -1062,6 +1063,7 @@ Page({
       formData: {},
       success: res => {
         wx.hideLoading();
+        this.setData({ isRecognizing: false });
         try {
           const data = JSON.parse(res.data);
           if (data.success) {
@@ -1074,6 +1076,7 @@ Page({
               duration: 3000
             });
           } else {
+            this.setData({ isRecognizing: false });
             wx.showToast({ title: '识别失败', icon: 'none' });
           }
         } catch (e) {
