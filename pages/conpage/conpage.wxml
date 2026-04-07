@@ -23,7 +23,7 @@
         
         <!-- 环境数据展示部分 -->
         <view class="section">
-          <text class="section-title">环境监测</text>
+          <view class="section-title">环境监测</view>
           <view class="data-grid">
             <view class="data-card">
               <text class="data-value">{{temperatureValue}}°C</text>
@@ -34,11 +34,11 @@
               <text class="data-label">湿度</text>
             </view>
             <view class="data-card" style="background-color: {{irColor}}">
-              <text class="data-value">{{irValue}}</text>
+              <text class="data-value">{{irValue ? irValue : '静止'}}</text>
               <text class="data-label">人体检测</text>
             </view>
             <view class="data-card" style="background-color: {{smokeColor}}">
-              <text class="data-value">{{smokeValue}}</text>
+              <text class="data-value">{{smokeValue ? smokeValue : '正常'}}</text>
               <text class="data-label">烟雾浓度</text>
             </view>
           </view>
@@ -46,10 +46,10 @@
 
         <!-- 安全监测部分 -->
         <view class="section">
-          <text class="section-title">安全监测</text>
+          <view class="section-title">安全监测</view>
           <view class="data-grid">
             <view class="data-card" style="background-color: {{flameColor}}">
-              <text class="data-value">{{flameValue}}</text>
+              <text class="data-value">{{flameValue ? flameValue : '正常'}}</text>
               <text class="data-label">火灾监测</text>
             </view>
             <view class="data-card" style="background-color: {{distanceColor}}">
@@ -61,7 +61,7 @@
 
         <!-- 医疗废物监测 -->
         <view class="section">
-          <text class="section-title">医疗废物监测</text>
+          <view class="section-title">医疗废物监测</view>
           <view class="waste-card">
             <view class="waste-details">
               <view class="waste-icon-and-label">
@@ -88,7 +88,7 @@
         
         <!-- AI智能分类 -->
         <view class="section">
-          <text class="section-title">图片上传识别</text>
+          <view class="section-title">图片上传识别</view>
           <view class="upload-card">
             <view wx:if="{{!previewImage}}" class="upload-header">
               <text class="upload-icon">📷</text>
@@ -105,7 +105,7 @@
 
         <!-- 实时识别结果卡片 -->
         <view class="section">
-          <text class="section-title">实时识别结果</text>
+          <view class="section-title">实时识别结果</view>
           <view class="classification-card">
             <view class="classification-details">
               <view class="classification-icon-and-label">
@@ -125,7 +125,7 @@
 
         <!-- 分类说明 -->
         <view class="section">
-          <text class="section-title">分类说明</text>
+          <view class="section-title">分类说明</view>
           <view class="classification-info-card">
             <view class="info-item">
               <text class="info-icon">💉</text>
