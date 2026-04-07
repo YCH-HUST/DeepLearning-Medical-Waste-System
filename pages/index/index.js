@@ -102,6 +102,7 @@ Page({
     const ds = e.currentTarget.dataset
     const deviceId = ds.deviceId
     const name = ds.name
+    
     wx.createBLEConnection({
       deviceId,
       success: (res) => {
@@ -111,12 +112,6 @@ Page({
           deviceId,
         })
         this.getBLEDeviceServices(deviceId)
-      }
-    })
-    wx.navigateTo({
-      url:'/pages/conpage/conpage',
-      success: (res) => {
-        console.log('跳转')
       }
     })
     this.stopBluetoothDevicesDiscovery()
@@ -167,7 +162,32 @@ Page({
             this._deviceId = deviceId
             this._serviceId = serviceId
             this._characteristicId = item.uuid
-            //this.writeBLECharacteristicValue()
+            //获取特征值
+            app.globalData.appcid = res.characteristics[0].uuid
+            console.log('charateristic_id is:', app.globalData.appcid)
+            
+            // 关键：在这里开启蓝牙通知
+            wx.notifyBLECharacteristicValueChange({
+              state: true, // 启用 notify 功能
+              deviceId: app.globalData.appdid,
+              serviceId: app.globalData.appsid,
+              characteristicId: app.globalData.appcid,
+              success: function (res) {
+                console.log('notifyBLECharacteristicValueChange success', res.errMsg);
+                // 开启成功后，使用 redirectTo 跳转到控制页面，避免返回动画
+                wx.redirectTo({
+                  url: '../conpage/conpage',
+                });
+              }.bind(this), // 绑定this上下文
+              fail: function (err) {
+                console.log('notifyBLECharacteristicValueChange failed:', err);
+                wx.showModal({
+                  title: '提示',
+                  content: '开启通知失败，无法接收数据！',
+                  showCancel: false,
+                });
+              }.bind(this) // 绑定this上下文
+            });
           }
           if (item.properties.notify || item.properties.indicate) {
             wx.notifyBLECharacteristicValueChange({
@@ -198,10 +218,6 @@ Page({
           value: ab2hex(characteristic.value)
         }
       }
-      // data[`chs[${this.data.chs.length}]`] = {
-      //   uuid: characteristic.characteristicId,
-      //   value: ab2hex(characteristic.value)
-      // }
       this.setData(data)
     })
   },

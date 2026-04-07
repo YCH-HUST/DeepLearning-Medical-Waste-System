@@ -2,21 +2,6 @@ var app = getApp()
 var hexStr
 var intStr
 
-const LABEL_MAP = {
-  zhusheqi: '注射器',
-  shoutao: '手套',
-  shabu: '纱布',
-  zhizhi: '纸质',
-  rentizuzhi: '人体组织',
-  niezi: '镊子',
-  kouzhao: '口罩',
-  zhusheqizhentou: '注射器针头',
-  suliao: '塑料',
-  youji: '有机',
-  jinshu: '金属',
-  boli: '玻璃'
-};
-
 Page({
   /**
    * 页面的初始数据
@@ -113,10 +98,6 @@ Page({
     
     // 数据更新防抖
     updateTimeout: null,    // 数据更新防抖定时器
-    previewImage: '',
-    result: null,
-    loading: false,
-    tempFilePath: '' // 新增临时图片路径
   },
 
   /**
@@ -169,24 +150,6 @@ Page({
         this.setData({
           isLoadingData: false
         });
-      } else {
-        // 3秒后还没收到数据，弹窗提示
-        wx.showModal({
-          title: '提示',
-          content: '3秒内未读取到设备数据，是否跳过？',
-          confirmText: '跳过',
-          cancelText: '等待',
-          success: (res) => {
-            if (res.confirm) {
-              // 跳过，直接进入页面
-              this.setData({
-                isLoadingData: false
-              });
-            } else {
-              // 继续等待，不做处理
-            }
-          }
-        });
       }
     }, 3000);
     
@@ -201,7 +164,21 @@ Page({
 
   // 英文标签到中文的映射函数
   mapLabelToChinese: function(englishLabel) {
-    return LABEL_MAP[englishLabel] || "无结果";
+    const labelMap = {
+      'zhusheqi': '注射器',
+      'shoutao': '手套',
+      'shabu': '纱布',
+      'zhizhi': '纸巾',
+      'rentizuzhi': '人体组织',
+      'niezi': '镊子',
+      'kouzhao': '口罩',
+      'zhusheqizhentou': '注射器针头',
+      'suliao': '塑料',
+      'youji': '有机废物',
+      'jinshu': '金属',
+      'boli': '玻璃'
+    };
+    return labelMap[englishLabel] || englishLabel; // 如果不在映射中，返回原标签
   },
 
   // 更新当前时间
@@ -286,6 +263,7 @@ Page({
     wx.onBLECharacteristicValueChange(function (characteristic) {
       console.log("Received data via notification.");
 
+      // --- 以下是完整的数据解析和UI更新逻辑 ---
       const buffer = characteristic.value;
       const dataView = new DataView(buffer);
       let hexStr = '';
@@ -472,44 +450,20 @@ Page({
 
   // 去皮功能
   tareWeight: function() {
-    if (!this.data.deviceConnected) {
+    if (this.data.deviceConnected) {
+      this.sendToBluetooth("TARE");
+      wx.showToast({
+        title: '去皮完成',
+        icon: 'success',
+        duration: 2000
+      });
+    } else {
       wx.showToast({
         title: '设备未连接',
         icon: 'error',
         duration: 2000
       });
-      return;
     }
-
-    // 显示确认弹窗
-    wx.showModal({
-      title: '确认去皮',
-      content: '确定要将当前重量设为零点吗？',
-      confirmText: '确定',
-      cancelText: '取消',
-      success: (res) => {
-        if (res.confirm) {
-          // 用户确认后，显示加载动画
-          wx.showLoading({
-            title: '去皮中...',
-            mask: true
-          });
-
-          // 发送去皮指令
-          this.sendToBluetooth("TARE");
-
-          // 1.5秒后隐藏加载动画并显示成功提示
-          setTimeout(() => {
-            wx.hideLoading();
-            wx.showToast({
-              title: '去皮成功',
-              icon: 'success',
-              duration: 2000
-            });
-          }, 1500);
-        }
-      }
-    });
   },
 
   // RGB灯预设选择
@@ -1022,69 +976,6 @@ Page({
     setTimeout(() => {
       this.sendToBluetooth("APP_READY");
     }, 1000);
-  },
-
-  chooseImage() {
-    wx.chooseImage({
-      count: 1,
-      sizeType: ['original', 'compressed'],
-      sourceType: ['album', 'camera'],
-      success: res => {
-        const tempFilePath = res.tempFilePaths[0];
-        this.setData({
-          previewImage: tempFilePath,
-          result: null,
-          tempFilePath: tempFilePath
-        });
-      }
-    });
-  },
-
-  clearImage() {
-    this.setData({
-      previewImage: '',
-      result: null,
-      tempFilePath: ''
-    });
-  },
-
-  startRecognition() {
-    const filePath = this.data.tempFilePath;
-    if (!filePath) return;
-    wx.showLoading({
-      title: '识别中',
-      mask: true
-    });
-    wx.uploadFile({
-      url: 'http://8.137.77.70:10000/classify',
-      filePath: filePath,
-      name: 'image',
-      formData: {},
-      success: res => {
-        wx.hideLoading();
-        try {
-          const data = JSON.parse(res.data);
-          if (data.success) {
-            // 用映射表转中文
-            const label = data.result.topPrediction.label;
-            const labelZh = LABEL_MAP[label] || label;
-            wx.showToast({
-              title: `${labelZh} (${data.result.topPrediction.percentage}%)`,
-              icon: 'success',
-              duration: 3000
-            });
-          } else {
-            wx.showToast({ title: '识别失败', icon: 'none' });
-          }
-        } catch (e) {
-          wx.showToast({ title: '返回数据异常', icon: 'none' });
-        }
-      },
-      fail: err => {
-        wx.hideLoading();
-        wx.showToast({ title: '上传失败', icon: 'none' });
-      }
-    });
   },
 
   /**

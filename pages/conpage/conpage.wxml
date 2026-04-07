@@ -1,26 +1,323 @@
-<!--pages/conpage/conpage.wxml-->
-<view class="title">智能中药柜——中药环境智能监测系统</view>
-<view class="title" style="margin-top: 0;font-size: 50rpx;">调试页面</view>
-<view class="container" style="margin-top: 50rpx;">
-  <view class="data-item">
-    <text>红外状态: {{infraredStatus}}</text>
+<view class="page {{isLoadingData ? 'loading' : ''}}">
+  <!-- 数据读取动画 -->
+  <view class="data-loading-overlay" hidden="{{!isLoadingData}}">
+    <view class="white-ring-container">
+      <view class="white-ring"></view>
+    </view>
+    <text class="loading-text">正在读取传感器数据...</text>
   </view>
-  <view class="data-item">
-    <text>麦克风值: {{microphoneValue}}</text>
+
+  <!-- 背景图片 -->
+  <image class="background" src="https://p1.itc.cn/q_70/images03/20211010/0060c7297cee463b83cf8094a66bcd85.gif"></image>
+  
+  <!-- 页面容器 -->
+  <view class="page-container {{currentTab}}" bindtouchstart="touchStart" bindtouchend="touchEnd">
+    
+    <!-- 数据监测页面 -->
+    <view class="page-content {{currentTab === 'monitor' ? 'active' : ''}}" data-tab="monitor">
+      <view class="content">
+        <!-- 标题部分 -->
+        <view class="title">
+          <text class="main-title">智能医疗监测系统</text>
+          <text class="sub-title">——数字化医疗硬件期末课程设计</text>
+        </view>
+        
+        <!-- 环境数据展示部分 -->
+        <view class="section">
+          <text class="section-title">环境监测</text>
+          <view class="data-grid">
+            <view class="data-card">
+              <text class="data-value">{{temperatureValue}}°C</text>
+              <text class="data-label">温度</text>
+            </view>
+            <view class="data-card">
+              <text class="data-value">{{humidityValue}}%</text>
+              <text class="data-label">湿度</text>
+            </view>
+            <view class="data-card" style="background-color: {{irColor}}">
+              <text class="data-value">{{irValue}}</text>
+              <text class="data-label">人体检测</text>
+            </view>
+            <view class="data-card" style="background-color: {{smokeColor}}">
+              <text class="data-value">{{smokeValue}}</text>
+              <text class="data-label">烟雾浓度</text>
+            </view>
+          </view>
+        </view>
+
+        <!-- 安全监测部分 -->
+        <view class="section">
+          <text class="section-title">安全监测</text>
+          <view class="data-grid">
+            <view class="data-card" style="background-color: {{flameColor}}">
+              <text class="data-value">{{flameValue}}</text>
+              <text class="data-label">火灾监测</text>
+            </view>
+            <view class="data-card" style="background-color: {{distanceColor}}">
+              <text class="data-value">{{distanceValue}}cm</text>
+              <text class="data-label">距离检测</text>
+            </view>
+          </view>
+        </view>
+
+        <!-- 医疗废物监测 -->
+        <view class="section">
+          <text class="section-title">医疗废物监测</text>
+          <view class="waste-card">
+            <view class="waste-details">
+              <view class="waste-icon-and-label">
+                <text class="waste-icon">🗑️</text>
+                <text class="waste-label">垃圾桶重量</text>
+              </view>
+              <view class="waste-value-container">
+                <text class="waste-value">{{weightValue}}</text>
+                <text class="waste-unit">g</text>
+              </view>
+            </view>
+            <view class="waste-progress-bar">
+              <progress percent="{{weightPercentage}}" stroke-width="10" activeColor="#e88e9d" backgroundColor="#3d4769" borderRadius="5"/>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 智能分类页面 -->
+    <view class="page-content {{currentTab === 'classification' ? 'active' : ''}}" data-tab="classification">
+      <view class="content">
+        <text class="page-title">AI智能分类</text>
+        
+        <!-- AI智能分类 -->
+        <view class="section">
+          <text class="section-title">图片上传识别</text>
+          <view class="upload-card">
+            <view wx:if="{{!previewImage}}" class="upload-header">
+              <text class="upload-icon">📷</text>
+              <text class="upload-title">上传图片进行智能识别</text>
+            </view>
+            <image wx:if="{{previewImage}}" src="{{previewImage}}" mode="aspectFit" class="preview-img-wide"/>
+            <view class="upload-btn-group">
+              <button wx:if="{{!previewImage}}" class="upload-btn" bindtap="chooseImage">点击上传图片</button>
+              <button wx:if="{{previewImage}}" class="recognize-btn" bindtap="startRecognition">开始识别</button>
+              <button wx:if="{{previewImage}}" class="clear-btn" bindtap="clearImage">清除图片</button>
+            </view>
+          </view>
+        </view>
+
+        <!-- 实时识别结果卡片 -->
+        <view class="section">
+          <text class="section-title">实时识别结果</text>
+          <view class="classification-card">
+            <view class="classification-details">
+              <view class="classification-icon-and-label">
+                <text class="classification-icon">🤖</text>
+                <text class="classification-label">识别结果</text>
+              </view>
+              <view class="classification-value-container">
+                <text class="classification-value">{{classificationValue}}</text>
+                <text class="confidence-unit">置信度: {{confidenceValue}}</text>
+              </view>
+            </view>
+            <view class="confidence-bar">
+              <progress percent="{{confidenceValue * 100}}" stroke-width="10" activeColor="#4caf50" backgroundColor="#3d4769" borderRadius="5"/>
+            </view>
+          </view>
+        </view>
+
+        <!-- 分类说明 -->
+        <view class="section">
+          <text class="section-title">分类说明</text>
+          <view class="classification-info-card">
+            <view class="info-item">
+              <text class="info-icon">💉</text>
+              <text class="info-text">注射器、针头等锐器类废物</text>
+            </view>
+            <view class="info-item">
+              <text class="info-icon">🧤</text>
+              <text class="info-text">手套、口罩等防护用品</text>
+            </view>
+            <view class="info-item">
+              <text class="info-icon">🩹</text>
+              <text class="info-text">纱布、纸质等敷料类</text>
+            </view>
+            <view class="info-item">
+              <text class="info-icon">🧬</text>
+              <text class="info-text">人体组织等生物废物</text>
+            </view>
+            <view class="info-item">
+              <text class="info-icon">🔧</text>
+              <text class="info-text">金属、玻璃等可回收物</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 设备控制页面 -->
+    <view class="page-content {{currentTab === 'device' ? 'active' : ''}}" data-tab="device">
+      <view class="content">
+        <text class="page-title">设备控制中心</text>
+        
+        <!-- 系统状态 - 移到最上面 -->
+        <view class="control-card modern">
+           <view class="control-header">
+            <view class="control-title-group">
+              <text class="control-icon">📶</text>
+              <text class="control-title">系统状态</text>
+            </view>
+          </view>
+          <view class="status-grid">
+            <view class="status-item">
+              <text class="status-label">连接状态</text>
+              <text class="status-value connected">{{connectionStatus}}</text>
+            </view>
+            <view class="status-item">
+              <text class="status-label">上次同步</text>
+              <text class="status-value">{{lastUpdateTime}}</text>
+            </view>
+          </view>
+        </view>
+
+        <!-- 风扇控制 -->
+        <view class="control-card modern">
+          <view class="control-header">
+            <view class="control-title-group">
+              <text class="control-icon">💨</text>
+              <text class="control-title">环境风扇</text>
+            </view>
+            <switch checked="{{fanOn}}" bindchange="toggleFan" color="#c06c84"/>
+          </view>
+        </view>
+
+        <!-- 重量传感器去皮控制 -->
+        <view class="control-card modern">
+          <view class="control-header">
+            <view class="control-title-group">
+              <text class="control-icon">⚖️</text>
+              <text class="control-title">重量传感器</text>
+            </view>
+          </view>
+          <view class="tare-control">
+            <text class="tare-description">点击去皮按钮将当前重量设为零点</text>
+            <button class="tare-button" bindtap="tareWeight" disabled="{{!deviceConnected}}">
+              <text class="tare-button-text">去皮</text>
+            </button>
+          </view>
+        </view>
+      </view>
+    </view>
+    
+    <!-- RGB灯控制页面 -->
+    <view class="page-content {{currentTab === 'rgb' ? 'active' : ''}}" data-tab="rgb">
+      <view class="content">
+        <text class="page-title">智能医疗光照</text>
+        
+        <!-- 主光源开关 -->
+        <view class="control-card modern">
+          <view class="control-header">
+            <view class="control-title-group">
+              <text class="control-icon">💡</text>
+              <text class="control-title">主光源</text>
+            </view>
+            <switch checked="{{lightOn}}" bindchange="toggleLight" color="#c06c84"/>
+          </view>
+        </view>
+
+        <!-- 亮度调节 -->
+        <view class="control-card">
+          <view class="control-header">
+            <text class="control-title">亮度调节</text>
+          </view>
+          <view class="brightness-control" catchtouchstart="disablePageSwipe" catchtouchend="enablePageSwipe">
+            <view class="slider-container">
+              <text class="slider-label">亮度</text>
+              <slider class="slider-bar" min="0" max="255" value="{{brightnessValue}}" bindchange="onBrightnessChange" 
+                active-color="#ffd700" 
+                background-color="rgba(255, 255, 255, 0.2)"
+                block-color="#ffd700"
+                block-size="20"
+                catchtouchstart="disablePageSwipe" catchtouchend="enablePageSwipe" />
+              <text class="slider-value">{{brightnessValue}}</text>
+            </view>
+          </view>
+        </view>
+
+        <!-- 手动调节 -->
+        <view class="control-card">
+          <view class="control-header">
+            <text class="control-title">手动精细调节</text>
+            <view class="rgb-preview" style="background-color: rgb({{redValue}}, {{greenValue}}, {{blueValue}})"></view>
+          </view>
+          <view class="rgb-controls" catchtouchstart="disablePageSwipe" catchtouchend="enablePageSwipe">
+            <view class="slider-container">
+              <text class="slider-label">红色 (R)</text>
+              <slider class="slider-bar" min="0" max="255" value="{{redValue}}" bindchange="onRedChange" 
+                active-color="#f06292" 
+                background-color="rgba(255, 255, 255, 0.2)"
+                block-color="#f06292"
+                block-size="20"
+                catchtouchstart="disablePageSwipe" catchtouchend="enablePageSwipe" />
+              <text class="slider-value">{{redValue}}</text>
+            </view>
+            <view class="slider-container">
+              <text class="slider-label">绿色 (G)</text>
+              <slider class="slider-bar" min="0" max="255" value="{{greenValue}}" bindchange="onGreenChange" 
+                active-color="#4db6ac" 
+                background-color="rgba(255, 255, 255, 0.2)"
+                block-color="#4db6ac"
+                block-size="20"
+                catchtouchstart="disablePageSwipe" catchtouchend="enablePageSwipe" />
+              <text class="slider-value">{{greenValue}}</text>
+            </view>
+            <view class="slider-container">
+              <text class="slider-label">蓝色 (B)</text>
+              <slider class="slider-bar" min="0" max="255" value="{{blueValue}}" bindchange="onBlueChange" 
+                active-color="#64b5f6"
+                background-color="rgba(255, 255, 255, 0.2)"
+                block-color="#64b5f6"
+                block-size="20"
+                catchtouchstart="disablePageSwipe" catchtouchend="enablePageSwipe" />
+              <text class="slider-value">{{blueValue}}</text>
+            </view>
+          </view>
+        </view>
+
+        <!-- 医疗光色预设 -->
+        <view class="preset-section">
+            <picker bindchange="onPresetChange" value="{{selectedPresetIndex}}" range="{{lightPresets}}" range-key="name">
+                <view class="picker-display">
+                    <text>{{selectedPresetIndex != null ? lightPresets[selectedPresetIndex].name : '请选择光照方案'}}</text>
+                    <text class="picker-arrow">▼</text>
+                </view>
+            </picker>
+
+            <view class="preset-description-card" wx:if="{{selectedPresetIndex != null}}">
+                <text class="desc-title">💡 应用说明</text>
+                <text class="desc-text">{{lightPresets[selectedPresetIndex].description}}</text>
+            </view>
+        </view>
+      </view>
+    </view>
   </view>
-  <view class="data-item">
-    <text>烟雾值: {{smokeValue}}</text>
-  </view>
-  <view class="data-item">
-    <text>雨滴值: {{rainValue}}</text>
-  </view>
-  <view class="data-item">
-    <text>距离: {{distanceValue}} cm</text>
-  </view>
-  <view class="data-item">
-    <text>温度: {{temperatureValue}} °C</text>
-  </view>
-  <view class="data-item">
-    <text>湿度: {{humidityValue}} %</text>
+
+  <!-- 底部切换栏 -->
+  <view class="tab-bar">
+    <view class="tab-item {{currentTab === 'monitor' ? 'active' : ''}}" bindtap="switchTab" data-tab="monitor">
+      <view class="tab-icon">📊</view>
+      <text class="tab-text">数据监测</text>
+    </view>
+    <view class="tab-item {{currentTab === 'classification' ? 'active' : ''}}" bindtap="switchTab" data-tab="classification">
+      <view class="tab-icon">🤖</view>
+      <text class="tab-text">智能分类</text>
+    </view>
+    <view class="tab-item {{currentTab === 'device' ? 'active' : ''}}" bindtap="switchTab" data-tab="device">
+      <view class="tab-icon">⚙️</view>
+      <text class="tab-text">设备控制</text>
+    </view>
+    <view class="tab-item {{currentTab === 'rgb' ? 'active' : ''}}" bindtap="switchTab" data-tab="rgb">
+      <view class="tab-icon">💡</view>
+      <text class="tab-text">RGB控制</text>
+    </view>
   </view>
 </view>
+
