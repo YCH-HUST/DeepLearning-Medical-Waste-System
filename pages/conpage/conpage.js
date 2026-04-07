@@ -58,11 +58,11 @@ Page({
     weightText: "无物品",      // 重量描述
     
     // 颜色状态
-    irColor: "rgba(61, 71, 105, 0.6)",
-    smokeColor: "rgba(61, 71, 105, 0.6)",
-    flameColor: "rgba(61, 71, 105, 0.6)",
-    distanceColor: "rgba(61, 71, 105, 0.6)",
-    weightColor: "rgba(61, 71, 105, 0.6)",
+    irColor: "#ffffff",
+    smokeColor: "#ffffff",
+    flameColor: "#ffffff",
+    distanceColor: "#ffffff",
+    weightColor: "#ffffff",
     
     // 风扇控制
     fanStatus: "关闭",
@@ -344,14 +344,14 @@ Page({
         var distanceText = distanceValue > 15 ? "开启" : "关闭";
         var weightText = weightValue > 0 ? "有物品" : "无物品";
 
-        var irColor = (irText === "有人") ? "#4CAF50" : "rgba(61, 71, 105, 0.6)";
+        var irColor = (irText === "有人") ? "#4CAF50" : "#ffffff";
         var smokeColor;
-        if (smokeValue <= 150) { smokeColor = "rgba(61, 71, 105, 0.6)"; } else if (smokeValue <= 1500) { smokeColor = "#FFD700"; } else if (smokeValue <= 3000) { smokeColor = "#FF8C00"; } else { smokeColor = "#FF4444"; }
-        var flameColor = (flameText === "正常") ? "rgba(61, 71, 105, 0.6)" : "#FF1744";
+        if (smokeValue <= 150) { smokeColor = "#ffffff"; } else if (smokeValue <= 1500) { smokeColor = "#FFD700"; } else if (smokeValue <= 3000) { smokeColor = "#FF8C00"; } else { smokeColor = "#FF4444"; }
+        var flameColor = (flameText === "正常") ? "#ffffff" : "#FF1744";
         var distanceColor;
-        if (distanceValue <= 5) { distanceColor = "#FF1744"; } else if (distanceValue <= 10) { distanceColor = "#FFD700"; } else if (distanceValue <= 15) { distanceColor = "#4CAF50"; } else { distanceColor = "rgba(61, 71, 105, 0.6)"; }
+        if (distanceValue <= 5) { distanceColor = "#FF1744"; } else if (distanceValue <= 10) { distanceColor = "#FFD700"; } else if (distanceValue <= 15) { distanceColor = "#4CAF50"; } else { distanceColor = "#ffffff"; }
         var weightColor;
-        if (weightValue === 0) { weightColor = "rgba(61, 71, 105, 0.6)"; } else if (weightValue <= 1000) { weightColor = "#2196F3"; } else if (weightValue <= 2000) { weightColor = "#4CAF50"; } else if (weightValue <= 3500) { weightColor = "#FFD700"; } else if (weightValue <= 4500) { weightColor = "#FF8C00"; } else { weightColor = "#FF1744"; }
+        if (weightValue === 0) { weightColor = "#ffffff"; } else if (weightValue <= 1000) { weightColor = "#2196F3"; } else if (weightValue <= 2000) { weightColor = "#4CAF50"; } else if (weightValue <= 3500) { weightColor = "#FFD700"; } else if (weightValue <= 4500) { weightColor = "#FF8C00"; } else { weightColor = "#FF1744"; }
 
         var updateData = { irValue, smokeValue, flameValue, distanceValue, weightValue, temperatureValue, humidityValue, weightPercentage, irText, smokeText, flameText, distanceText, weightText, irColor, smokeColor, flameColor, distanceColor, weightColor, classificationValue, confidenceValue };
         

@@ -7,8 +7,7 @@
     <text class="loading-text">正在读取传感器数据...</text>
   </view>
 
-  <!-- 背景图片 -->
-  <image class="background" src="https://p1.itc.cn/q_70/images03/20211010/0060c7297cee463b83cf8094a66bcd85.gif"></image>
+  <!-- 背景图片已移除 -->
   
   <!-- 页面容器 -->
   <view class="page-container {{currentTab}}" bindtouchstart="touchStart" bindtouchend="touchEnd">
@@ -75,7 +74,7 @@
               </view>
             </view>
             <view class="waste-progress-bar">
-              <progress percent="{{weightPercentage}}" stroke-width="10" activeColor="#e88e9d" backgroundColor="#3d4769" borderRadius="5"/>
+              <progress percent="{{weightPercentage}}" stroke-width="10" activeColor="#4caf50" backgroundColor="#e8f5e9" borderRadius="5"/>
             </view>
           </view>
         </view>
@@ -119,7 +118,7 @@
               </view>
             </view>
             <view class="confidence-bar">
-              <progress percent="{{confidenceValue * 100}}" stroke-width="10" activeColor="#4caf50" backgroundColor="#3d4769" borderRadius="5"/>
+              <progress percent="{{confidenceValue * 100}}" stroke-width="10" activeColor="#4caf50" backgroundColor="#e8f5e9" borderRadius="5"/>
             </view>
           </view>
         </view>
@@ -185,7 +184,7 @@
               <text class="control-icon">💨</text>
               <text class="control-title">环境风扇</text>
             </view>
-            <switch checked="{{fanOn}}" bindchange="toggleFan" color="#c06c84"/>
+            <switch checked="{{fanOn}}" bindchange="toggleFan" color="#4caf50"/>
           </view>
         </view>
 
@@ -219,7 +218,7 @@
               <text class="control-icon">💡</text>
               <text class="control-title">主光源</text>
             </view>
-            <switch checked="{{lightOn}}" bindchange="toggleLight" color="#c06c84"/>
+            <switch checked="{{lightOn}}" bindchange="toggleLight" color="#4caf50"/>
           </view>
         </view>
 
@@ -233,7 +232,7 @@
               <text class="slider-label">亮度</text>
               <slider class="slider-bar" min="0" max="255" value="{{brightnessValue}}" bindchange="onBrightnessChange" 
                 active-color="#ffd700" 
-                background-color="rgba(255, 255, 255, 0.2)"
+                background-color="rgba(0, 0, 0, 0.1)"
                 block-color="#ffd700"
                 block-size="20"
                 catchtouchstart="disablePageSwipe" catchtouchend="enablePageSwipe" />
@@ -253,7 +252,7 @@
               <text class="slider-label">红色 (R)</text>
               <slider class="slider-bar" min="0" max="255" value="{{redValue}}" bindchange="onRedChange" 
                 active-color="#f06292" 
-                background-color="rgba(255, 255, 255, 0.2)"
+                background-color="rgba(0, 0, 0, 0.1)"
                 block-color="#f06292"
                 block-size="20"
                 catchtouchstart="disablePageSwipe" catchtouchend="enablePageSwipe" />
@@ -263,7 +262,7 @@
               <text class="slider-label">绿色 (G)</text>
               <slider class="slider-bar" min="0" max="255" value="{{greenValue}}" bindchange="onGreenChange" 
                 active-color="#4db6ac" 
-                background-color="rgba(255, 255, 255, 0.2)"
+                background-color="rgba(0, 0, 0, 0.1)"
                 block-color="#4db6ac"
                 block-size="20"
                 catchtouchstart="disablePageSwipe" catchtouchend="enablePageSwipe" />
@@ -273,7 +272,7 @@
               <text class="slider-label">蓝色 (B)</text>
               <slider class="slider-bar" min="0" max="255" value="{{blueValue}}" bindchange="onBlueChange" 
                 active-color="#64b5f6"
-                background-color="rgba(255, 255, 255, 0.2)"
+                background-color="rgba(0, 0, 0, 0.1)"
                 block-color="#64b5f6"
                 block-size="20"
                 catchtouchstart="disablePageSwipe" catchtouchend="enablePageSwipe" />
