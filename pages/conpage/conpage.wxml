@@ -25,20 +25,36 @@
         <view class="section">
           <view class="section-title">环境监测</view>
           <view class="data-grid">
-            <view class="data-card">
-              <text class="data-value">{{temperatureValue}}°C</text>
+            <view class="data-card dashboard-card">
+              <view class="dashboard-ring" style="background: conic-gradient(#10B981 {{temperatureValue / 50 * 360}}deg, rgba(16,185,129,0.1) 0deg);">
+                <view class="dashboard-inner">
+                  <text class="dashboard-value">{{temperatureValue}}</text>
+                  <text class="dashboard-unit">°C</text>
+                </view>
+              </view>
               <text class="data-label">温度</text>
             </view>
-            <view class="data-card">
-              <text class="data-value">{{humidityValue}}%</text>
+            <view class="data-card dashboard-card">
+              <view class="dashboard-ring" style="background: conic-gradient(#3B82F6 {{humidityValue / 100 * 360}}deg, rgba(59,130,246,0.1) 0deg);">
+                <view class="dashboard-inner">
+                  <text class="dashboard-value">{{humidityValue}}</text>
+                  <text class="dashboard-unit">%</text>
+                </view>
+              </view>
               <text class="data-label">湿度</text>
             </view>
-            <view class="data-card" style="background-color: {{irColor}}">
-              <text class="data-value">{{irValue ? irValue : '静止'}}</text>
+            <view class="data-card dashboard-card" style="background-color: {{irColor}}">
+              <view class="radar-container {{(irValue == '有人') ? 'radar-active' : 'radar-inactive'}}">
+                <view class="radar-beam"></view>
+                <text class="radar-value">{{irValue ? irValue : '静止'}}</text>
+              </view>
               <text class="data-label">人体检测</text>
             </view>
-            <view class="data-card" style="background-color: {{smokeColor}}">
-              <text class="data-value">{{smokeValue ? smokeValue : '正常'}}</text>
+            <view class="data-card dashboard-card" style="background-color: {{smokeColor}}">
+              <view class="warning-light {{(smokeValue && smokeValue != '正常') ? 'light-danger' : 'light-safe'}}">
+                <view class="light-glow"></view>
+                <text class="light-value">{{smokeValue ? smokeValue : '正常'}}</text>
+              </view>
               <text class="data-label">烟雾浓度</text>
             </view>
           </view>
@@ -48,12 +64,20 @@
         <view class="section">
           <view class="section-title">安全监测</view>
           <view class="data-grid">
-            <view class="data-card" style="background-color: {{flameColor}}">
-              <text class="data-value">{{flameValue ? flameValue : '正常'}}</text>
+            <view class="data-card dashboard-card" style="background-color: {{flameColor}}">
+              <view class="warning-light {{(flameValue && flameValue != '正常') ? 'light-danger' : 'light-safe'}}">
+                <view class="light-glow"></view>
+                <text class="light-value">{{flameValue ? flameValue : '正常'}}</text>
+              </view>
               <text class="data-label">火灾监测</text>
             </view>
-            <view class="data-card" style="background-color: {{distanceColor}}">
-              <text class="data-value">{{distanceValue}}cm</text>
+            <view class="data-card dashboard-card" style="background-color: {{distanceColor}}">
+              <view class="dashboard-ring" style="background: conic-gradient(#8B5CF6 {{(distanceValue > 100 ? 100 : distanceValue) / 100 * 360}}deg, rgba(139,92,246,0.1) 0deg);">
+                <view class="dashboard-inner">
+                  <text class="dashboard-value">{{distanceValue}}</text>
+                  <text class="dashboard-unit">cm</text>
+                </view>
+              </view>
               <text class="data-label">距离检测</text>
             </view>
           </view>

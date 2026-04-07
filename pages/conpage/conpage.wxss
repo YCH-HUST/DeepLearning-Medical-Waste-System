@@ -1075,3 +1075,152 @@ slider.slider-bar .wx-slider-handle {
   align-items: center;
   width: 95%;
 }
+
+/* ==================== 仪表盘及动态可视化样式 ==================== */
+
+.dashboard-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 160rpx;
+  padding: 20rpx 10rpx;
+  gap: 12rpx;
+}
+
+/* 圆形进度仪表盘 */
+.dashboard-ring {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 2rpx 8rpx rgba(0, 0, 0, 0.08);
+  transition: background 0.5s ease-out;
+}
+.dashboard-inner {
+  width: 96rpx;
+  height: 96rpx;
+  background: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.06);
+}
+.dashboard-value {
+  font-size: 32rpx;
+  font-weight: 900;
+  color: #111827;
+  line-height: 1;
+}
+.dashboard-unit {
+  font-size: 20rpx;
+  color: #64748B;
+  font-weight: bold;
+}
+
+/* 雷达扫描动画 (人体检测) */
+.radar-container {
+  width: 110rpx;
+  height: 110rpx;
+  border-radius: 50%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+.radar-inactive {
+  background: radial-gradient(circle, rgba(16,185,129,0.1) 0%, rgba(16,185,129,0.03) 100%);
+  border: 2rpx solid rgba(16,185,129,0.2);
+}
+.radar-active {
+  background: radial-gradient(circle, rgba(239,68,68,0.1) 0%, rgba(239,68,68,0.03) 100%);
+  border: 2rpx solid rgba(239,68,68,0.3);
+}
+.radar-beam {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  transform-origin: 50% 50%;
+  animation: radar-spin 3s linear infinite;
+}
+.radar-inactive .radar-beam {
+  background: conic-gradient(from 0deg, transparent 0%, transparent 60%, rgba(16,185,129,0.6) 100%);
+}
+.radar-active .radar-beam {
+  background: conic-gradient(from 0deg, transparent 0%, transparent 40%, rgba(239,68,68,0.8) 100%);
+  animation: radar-spin 1s linear infinite; /* 警告时加倍转速 */
+}
+.radar-value {
+  position: relative;
+  z-index: 2;
+  font-size: 26rpx;
+  font-weight: 800;
+  color: #10B981;
+}
+.radar-active .radar-value {
+  color: #EF4444;
+}
+
+@keyframes radar-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 报警指示灯呼吸动画 (烟雾/火灾) */
+.warning-light {
+  width: 110rpx;
+  height: 110rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.light-safe .light-glow {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: rgba(16,185,129,0.12);
+  animation: breathe 3s ease-in-out infinite;
+  box-shadow: 0 0 10rpx rgba(16,185,129,0.1);
+}
+.light-safe .light-value {
+  color: #10B981;
+}
+.light-danger .light-glow {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: rgba(239,68,68,0.2);
+  animation: emergency-flash 0.8s infinite;
+  box-shadow: 0 0 20rpx rgba(239,68,68,0.4);
+}
+.light-danger .light-value {
+  color: #B91C1C;
+}
+.light-value {
+  position: relative;
+  font-size: 26rpx;
+  font-weight: 900;
+  z-index: 2;
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.05); opacity: 0.4; }
+}
+@keyframes emergency-flash {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.9); }
+}
