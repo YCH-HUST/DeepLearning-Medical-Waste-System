@@ -269,7 +269,9 @@
               value="{{aiInput}}" 
               bindinput="onAiInputChange" 
               maxlength="200"
-              placeholder-style="color: #94a3b8; font-size: 26rpx; line-height: 1.5;">
+              placeholder-style="color: #94a3b8; font-size: 26rpx; line-height: 1.5;"
+              catchtouchstart="disablePageSwipe" 
+              catchtouchend="enablePageSwipe">
             </textarea>
 
             <!-- 格式指南与提示 -->
