@@ -116,7 +116,18 @@ Page({
     previewImage: '',
     result: null,
     loading: false,
-    tempFilePath: '' // 新增临时图片路径
+    tempFilePath: '', // 新增临时图片路径
+    
+    // AI 智能光谱推荐相关数据
+    aiInput: '',
+    aiLoading: false,
+    aiResult: null,
+    aiPresets: [
+      '检测血迹与血水残留',
+      '辅助进行静脉穿刺',
+      '检测化学药液浑浊度与沉淀',
+      '黄色医疗废物满溢警示'
+    ]
   },
 
   /**
@@ -1093,6 +1104,157 @@ Page({
         wx.showToast({ title: '上传失败', icon: 'none' });
       }
     });
+  },
+
+  onAiInputChange: function(e) {
+    this.setData({
+      aiInput: e.detail.value
+    });
+  },
+
+  onAiPresetClick: function(e) {
+    const text = e.currentTarget.dataset.text;
+    this.setData({
+      aiInput: text
+    }, () => {
+      this.sendAIRequest();
+    });
+  },
+
+  sendAIRequest: function() {
+    const query = this.data.aiInput.trim();
+    if (!query) {
+      wx.showToast({
+        title: '请输入您的需求',
+        icon: 'none'
+      });
+      return;
+    }
+
+    this.setData({
+      aiLoading: true,
+      aiResult: null
+    });
+
+    const apiKey = "sk-awzypccehztaldwxdwokkfmarjtvqqzbqgrqwlkjtlmslywa";
+    const apiUrl = "https://api.siliconflow.cn/v1/chat/completions";
+    const systemPrompt = `你是一个智能医疗设备光照助手，专门为医疗废弃物检测、环境污染排查、医学检验以及临床护理推荐最合适的光源（RGB颜色及亮度参数）。
+请根据用户的检测需求，给出最科学的光谱解决方案。你必须只返回一个符合以下JSON格式的字符串，不要包含任何前言、后记、Markdown标记（如\`\`\`json）或额外的解释文字。
+
+JSON格式模板：
+{
+  "success": true,
+  "presetName": "方案名称（简短，如：血迹增强检测）",
+  "r": 红色通道值（0-255的整数）,
+  "g": 绿色通道值（0-255的整数）,
+  "b": 蓝色通道值（0-255的整数）,
+  "brightness": 推荐亮度（0-255的整数，通常建议为255以保证清晰度，特殊微弱光照除外）,
+  "reason": "科学物理解释（30字以内，极其简短说明为什么这个RGB比例最适合，如互补色吸收等原理）"
+}
+
+如果无法识别需求或不属于医疗光照场景，请返回：
+{
+  "success": false,
+  "presetName": "无法匹配",
+  "r": 0,
+  "g": 0,
+  "b": 0,
+  "brightness": 0,
+  "reason": "抱歉，我无法识别此项需求对应的医疗光照光谱，请重新描述您的检测任务。"
+}`;
+
+    wx.request({
+      url: apiUrl,
+      method: 'POST',
+      header: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json'
+      },
+      data: {
+        model: 'Qwen/Qwen3.6-35B-A3B',
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: query }
+        ],
+        temperature: 0.1,
+        thinking: {
+          type: "disabled"
+        }
+      },
+      success: (res) => {
+        this.setData({ aiLoading: false });
+        if (res.statusCode === 200 && res.data && res.data.choices && res.data.choices.length > 0) {
+          let content = res.data.choices[0].message.content.trim();
+          
+          // 容错处理：去除可能包含的 markdown json 代码块包裹
+          if (content.startsWith("```")) {
+            content = content.replace(/^```json\s*/, "").replace(/```$/, "").trim();
+          }
+
+          try {
+            const parsed = JSON.parse(content);
+            if (parsed.success) {
+              this.setData({
+                aiResult: parsed
+              });
+              // 自动应用灯光
+              this.applyAiLight(parsed);
+              wx.showToast({
+                title: '已自动应用光谱',
+                icon: 'success'
+              });
+            } else {
+              this.setData({
+                aiResult: {
+                  success: false,
+                  reason: parsed.reason || '大模型未能匹配到适合的光谱方案，请换个需求试试。'
+                }
+              });
+            }
+          } catch (e) {
+            console.error("JSON parse error:", e, content);
+            wx.showToast({
+              title: '推荐方案解析失败',
+              icon: 'none'
+            });
+          }
+        } else {
+          console.error("API Error Response:", res);
+          wx.showToast({
+            title: '服务暂时不可用',
+            icon: 'none'
+          });
+        }
+      },
+      fail: (err) => {
+        this.setData({ aiLoading: false });
+        console.error("API request failed:", err);
+        wx.showToast({
+          title: '网络请求失败',
+          icon: 'none'
+        });
+      }
+    });
+  },
+
+  applyAiLight: function(aiData) {
+    if (!aiData) return;
+    
+    // 如果没有传入具体参数，使用当前的 aiResult
+    const dataToApply = aiData.r !== undefined ? aiData : this.data.aiResult;
+    if (!dataToApply || !dataToApply.success) return;
+
+    this.setData({
+      redValue: dataToApply.r,
+      greenValue: dataToApply.g,
+      blueValue: dataToApply.b,
+      brightnessValue: dataToApply.brightness,
+      lightOn: dataToApply.r > 0 || dataToApply.g > 0 || dataToApply.b > 0,
+      selectedPresetIndex: null // 清除常规的预设索引
+    });
+
+    // 下发蓝牙数据
+    this.sendRGBToBluetooth();
   },
 
   /**

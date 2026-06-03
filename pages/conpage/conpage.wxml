@@ -255,6 +255,65 @@
           </view>
         </view>
 
+        <!-- AI智能光谱推荐 -->
+        <view class="control-card modern">
+          <view class="control-title-group" style="margin-bottom: 20rpx;">
+            <text class="control-icon">🤖</text>
+            <text class="control-title">AI 智能光谱生成</text>
+          </view>
+          
+          <!-- 对话输入框 -->
+          <view class="ai-input-container">
+            <textarea class="ai-textarea" 
+              placeholder="请输入您的具体检测或照明需求，如：&#10;- 帮我调配用于对比显现血迹的光谱&#10;- 我想检测注射器针头上的荧光液残留" 
+              value="{{aiInput}}" 
+              bindinput="onAiInputChange" 
+              maxlength="200"
+              placeholder-style="color: #94a3b8; font-size: 26rpx; line-height: 1.5;">
+            </textarea>
+            
+            <button class="ai-submit-btn {{aiLoading ? 'loading' : ''}}" bindtap="sendAIRequest" disabled="{{aiLoading || !deviceConnected}}">
+              <text wx:if="{{!aiLoading}}">✨ 生成并应用光谱</text>
+              <text wx:else>🧬 正在计算光谱方案...</text>
+            </button>
+          </view>
+          
+          <!-- 预置快捷问题标签 -->
+          <view class="ai-presets-label">快捷需求：</view>
+          <view class="ai-presets-grid">
+            <view wx:for="{{aiPresets}}" wx:key="index" class="ai-preset-tag" data-text="{{item}}" bindtap="onAiPresetClick">
+              # {{item}}
+            </view>
+          </view>
+
+          <!-- AI 推荐方案展示结果卡片 -->
+          <view class="ai-result-card" wx:if="{{aiResult}}">
+            <block wx:if="{{aiResult.success}}">
+              <view class="ai-result-header">
+                <view class="ai-result-title">🎯 推荐方案：{{aiResult.presetName}}</view>
+                <view class="ai-result-badge" style="background-color: rgb({{aiResult.r}}, {{aiResult.g}}, {{aiResult.b}}); box-shadow: 0 0 16rpx rgba({{aiResult.r}}, {{aiResult.g}}, {{aiResult.b}}, 0.5);"></view>
+              </view>
+              <view class="ai-result-params">
+                <text class="param-tag">R: {{aiResult.r}}</text>
+                <text class="param-tag">G: {{aiResult.g}}</text>
+                <text class="param-tag">B: {{aiResult.b}}</text>
+                <text class="param-tag">亮度: {{aiResult.brightness}}</text>
+              </view>
+              <view class="ai-result-reason">
+                <text class="reason-title">💡 科学原理解释：</text>
+                <text class="reason-text">{{aiResult.reason}}</text>
+              </view>
+              <button class="ai-apply-btn" bindtap="applyAiLight">重新应用此方案</button>
+            </block>
+            <block wx:else>
+              <view class="ai-result-reason error">
+                <text class="reason-title">❌ 未能匹配光谱：</text>
+                <text class="reason-text">{{aiResult.reason}}</text>
+              </view>
+            </block>
+          </view>
+        </view>
+
         <!-- 亮度调节 -->
         <view class="control-card">
           <view class="control-header">
