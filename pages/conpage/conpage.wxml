@@ -18,7 +18,7 @@
         <!-- 标题部分 -->
         <view class="title">
           <text class="main-title">医境智控</text>
-          <text class="sub-title">——基于YOLO的智能医疗废物分类与环境监测系统</text>
+          <text class="sub-title">——基于深度学习的智能医疗废物分类与环境监测系统</text>
         </view>
         
         <!-- 环境数据展示部分 -->
