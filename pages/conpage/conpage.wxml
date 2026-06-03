@@ -43,17 +43,17 @@
               </view>
               <text class="data-label">湿度</text>
             </view>
-            <view class="data-card dashboard-card" style="background-color: {{irColor}}">
-              <view class="radar-container {{(irValue == '有人') ? 'radar-active' : 'radar-inactive'}}">
+            <view class="data-card dashboard-card {{irText == '有人' ? 'alert-active' : ''}}" style="background-color: {{irColor}}">
+              <view class="radar-container {{(irText == '有人') ? 'radar-active' : 'radar-inactive'}}">
                 <view class="radar-beam"></view>
-                <text class="radar-value">{{irValue ? irValue : '静止'}}</text>
+                <text class="radar-value">{{irText ? irText : '静止'}}</text>
               </view>
               <text class="data-label">人体检测</text>
             </view>
-            <view class="data-card dashboard-card" style="background-color: {{smokeColor}}">
-              <view class="warning-light {{(smokeValue && smokeValue != '正常') ? 'light-danger' : 'light-safe'}}">
+            <view class="data-card dashboard-card {{smokeText && smokeText != '正常' ? 'alert-active' : ''}}" style="background-color: {{smokeColor}}">
+              <view class="warning-light {{(smokeText && smokeText != '正常') ? 'light-danger' : 'light-safe'}}">
                 <view class="light-glow"></view>
-                <text class="light-value">{{smokeValue ? smokeValue : '正常'}}</text>
+                <text class="light-value">{{smokeText ? smokeText : '正常'}}</text>
               </view>
               <text class="data-label">烟雾浓度</text>
             </view>
@@ -64,10 +64,10 @@
         <view class="section">
           <view class="section-title">安全监测</view>
           <view class="data-grid">
-            <view class="data-card dashboard-card" style="background-color: {{flameColor}}">
-              <view class="warning-light {{(flameValue && flameValue != '正常') ? 'light-danger' : 'light-safe'}}">
+            <view class="data-card dashboard-card {{flameText && flameText != '正常' ? 'alert-active' : ''}}" style="background-color: {{flameColor}}">
+              <view class="warning-light {{(flameText && flameText != '正常') ? 'light-danger' : 'light-safe'}}">
                 <view class="light-glow"></view>
-                <text class="light-value">{{flameValue ? flameValue : '正常'}}</text>
+                <text class="light-value">{{flameText ? flameText : '正常'}}</text>
               </view>
               <text class="data-label">火灾监测</text>
             </view>

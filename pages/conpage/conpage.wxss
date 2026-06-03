@@ -1532,3 +1532,33 @@ slider.slider-bar .wx-slider-handle {
   background-color: #f0fdf4;
   transform: scale(0.98);
 }
+
+/* ==================== 报警状态下的卡片文字及动画高亮优化 ==================== */
+.data-card.alert-active {
+  border-color: transparent !important;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.12) !important;
+}
+
+.data-card.alert-active .data-label {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.data-card.alert-active .radar-value,
+.data-card.alert-active .light-value {
+  color: #ffffff !important;
+}
+
+.data-card.alert-active .radar-container {
+  border-color: rgba(255, 255, 255, 0.4) !important;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.05) 100%) !important;
+}
+
+.data-card.alert-active .radar-beam {
+  background: conic-gradient(from 0deg, transparent 0%, transparent 40%, rgba(255, 255, 255, 0.9) 100%) !important;
+}
+
+.data-card.alert-active .warning-light .light-glow {
+  background: rgba(255, 255, 255, 0.3) !important;
+  box-shadow: 0 0 15rpx rgba(255, 255, 255, 0.5) !important;
+}
+
