@@ -586,17 +586,18 @@ Page({
     const newRedValue = e.detail.value;
     const currentGreen = this.data.greenValue;
     const currentBlue = this.data.blueValue;
+    const currentBrightness = this.data.brightnessValue;
     
-    // 如果RGB值大于0，自动打开开关并拉满亮度
-    if (newRedValue > 0 || currentGreen > 0 || currentBlue > 0) {
+    const hasColor = newRedValue > 0 || currentGreen > 0 || currentBlue > 0;
+    
+    if (hasColor) {
       this.setData({
         redValue: newRedValue,
         lightOn: true,
-        brightnessValue: 255,
+        brightnessValue: currentBrightness > 0 ? currentBrightness : 255,
         selectedPresetIndex: null
       });
     } else {
-      // 所有RGB都为0，自动关闭开关和亮度
       this.setData({
         redValue: newRedValue,
         lightOn: false,
@@ -611,17 +612,18 @@ Page({
     const newGreenValue = e.detail.value;
     const currentRed = this.data.redValue;
     const currentBlue = this.data.blueValue;
+    const currentBrightness = this.data.brightnessValue;
     
-    // 如果RGB值大于0，自动打开开关并拉满亮度
-    if (currentRed > 0 || newGreenValue > 0 || currentBlue > 0) {
+    const hasColor = currentRed > 0 || newGreenValue > 0 || currentBlue > 0;
+    
+    if (hasColor) {
       this.setData({
         greenValue: newGreenValue,
         lightOn: true,
-        brightnessValue: 255,
+        brightnessValue: currentBrightness > 0 ? currentBrightness : 255,
         selectedPresetIndex: null
       });
     } else {
-      // 所有RGB都为0，自动关闭开关和亮度
       this.setData({
         greenValue: newGreenValue,
         lightOn: false,
@@ -636,17 +638,18 @@ Page({
     const newBlueValue = e.detail.value;
     const currentRed = this.data.redValue;
     const currentGreen = this.data.greenValue;
+    const currentBrightness = this.data.brightnessValue;
     
-    // 如果RGB值大于0，自动打开开关并拉满亮度
-    if (currentRed > 0 || currentGreen > 0 || newBlueValue > 0) {
+    const hasColor = currentRed > 0 || currentGreen > 0 || newBlueValue > 0;
+    
+    if (hasColor) {
       this.setData({
         blueValue: newBlueValue,
         lightOn: true,
-        brightnessValue: 255,
+        brightnessValue: currentBrightness > 0 ? currentBrightness : 255,
         selectedPresetIndex: null
       });
     } else {
-      // 所有RGB都为0，自动关闭开关和亮度
       this.setData({
         blueValue: newBlueValue,
         lightOn: false,
@@ -659,19 +662,21 @@ Page({
 
   onBrightnessChange: function(e) {
     const newBrightness = e.detail.value;
+    const currentRed = this.data.redValue;
+    const currentGreen = this.data.greenValue;
+    const currentBlue = this.data.blueValue;
     
     if (newBrightness > 0) {
-      // 亮度大于0，自动打开开关并拉满RGB
+      const hasColor = currentRed > 0 || currentGreen > 0 || currentBlue > 0;
       this.setData({
         brightnessValue: newBrightness,
         lightOn: true,
-        redValue: 255,
-        greenValue: 255,
-        blueValue: 255,
+        redValue: hasColor ? currentRed : 255,
+        greenValue: hasColor ? currentGreen : 255,
+        blueValue: hasColor ? currentBlue : 255,
         selectedPresetIndex: null
       });
     } else {
-      // 亮度为0，自动关闭开关和RGB
       this.setData({
         brightnessValue: newBrightness,
         lightOn: false,
