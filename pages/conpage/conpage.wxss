@@ -114,8 +114,9 @@ page {
   width: 25%; /* 每个页面占容器宽度的1/4 */
   height: 100%;
   overflow-y: auto;
-  padding-bottom: 120rpx; /* 为底部切换栏留出空间 */
+  padding-bottom: 160rpx; /* 增加底部留白空间，避免原来预置方案被遮挡 */
   flex-shrink: 0; /* 防止页面被压缩 */
+  box-sizing: border-box; /* 确保 padding-bottom 不会把页面底部推出视口 */
 }
 
 .page-content.active {
@@ -1348,7 +1349,34 @@ slider.slider-bar .wx-slider-handle {
   box-shadow: 0 0 12rpx rgba(16, 185, 129, 0.1);
 }
 
+.ai-input-tip {
+  margin-top: 5rpx;
+  background-color: #f8fafc;
+  border-radius: 8rpx;
+  padding: 12rpx 16rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+  border: 1rpx solid #f1f5f9;
+}
+
+.tip-title {
+  font-size: 22rpx;
+  font-weight: bold;
+  color: #64748b;
+}
+
+.tip-text {
+  font-size: 22rpx;
+  color: #94a3b8;
+  padding-left: 8rpx;
+  line-height: 1.4;
+}
+
 .ai-submit-btn {
+  width: 100% !important;
+  white-space: nowrap;
+  box-sizing: border-box;
   background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   color: #ffffff;
   font-size: 28rpx;

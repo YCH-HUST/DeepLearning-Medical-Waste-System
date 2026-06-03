@@ -265,14 +265,21 @@
           <!-- 对话输入框 -->
           <view class="ai-input-container">
             <textarea class="ai-textarea" 
-              placeholder="请输入您的具体检测或照明需求，如：&#10;- 帮我调配用于对比显现血迹的光谱&#10;- 我想检测注射器针头上的荧光液残留" 
+              placeholder="请输入您的具体检测或照明需求（例如：检测血迹、辅助穿刺等）..." 
               value="{{aiInput}}" 
               bindinput="onAiInputChange" 
               maxlength="200"
               placeholder-style="color: #94a3b8; font-size: 26rpx; line-height: 1.5;">
             </textarea>
+
+            <!-- 格式指南与提示 -->
+            <view class="ai-input-tip">
+              <text class="tip-title">💡 输入示例参考：</text>
+              <text class="tip-text">• 帮我调配用于对比和显现血迹的绿色对比光谱</text>
+              <text class="tip-text">• 我想用红光辅助夜间环境照明，但不破坏暗适应</text>
+            </view>
             
-            <button class="ai-submit-btn {{aiLoading ? 'loading' : ''}}" bindtap="sendAIRequest" disabled="{{aiLoading || !deviceConnected}}">
+            <button class="ai-submit-btn {{aiLoading ? 'loading' : ''}}" bindtap="sendAIRequest" disabled="{{aiLoading}}">
               <text wx:if="{{!aiLoading}}">✨ 生成并应用光谱</text>
               <text wx:else>🧬 正在计算光谱方案...</text>
             </button>

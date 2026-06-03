@@ -1200,7 +1200,7 @@ JSON格式模板：
               // 自动应用灯光
               this.applyAiLight(parsed);
               wx.showToast({
-                title: '已自动应用光谱',
+                title: this.data.deviceConnected ? '已自动应用光谱' : '已应用（设备未连接）',
                 icon: 'success'
               });
             } else {
