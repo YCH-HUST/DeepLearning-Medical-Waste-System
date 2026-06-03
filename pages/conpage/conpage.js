@@ -237,6 +237,7 @@ Page({
   // 触摸开始
   touchStart: function(e) {
     if (this.data.pageSwipeDisabled) return;
+    if (e.target && e.target.id === 'aiTextarea') return;
     this.setData({
       touchStartX: e.touches[0].clientX
     });
@@ -245,6 +246,7 @@ Page({
   // 触摸结束
   touchEnd: function(e) {
     if (this.data.pageSwipeDisabled) return;
+    if (e.target && e.target.id === 'aiTextarea') return;
     const touchEndX = e.changedTouches[0].clientX;
     const touchStartX = this.data.touchStartX;
     const diffX = touchEndX - touchStartX;
@@ -468,14 +470,16 @@ Page({
       });
       this.sendToBluetooth("RGB=255,255,255,255");
     } else {
-      // 关闭时所有灯光熄灭
+      // 关闭时所有灯光熄灭，清除 AI 输入和推荐结果
       this.setData({
         lightOn: false,
         redValue: 0,
         greenValue: 0,
         blueValue: 0,
         brightnessValue: 0,
-        selectedPresetIndex: null
+        selectedPresetIndex: null,
+        aiInput: '',
+        aiResult: null
       });
       this.sendToBluetooth("RGB=0,0,0,0");
     }
@@ -714,7 +718,9 @@ Page({
       blueValue: 0,
       brightnessValue: 0,
       lightOn: false,
-      selectedPresetIndex: null
+      selectedPresetIndex: null,
+      aiInput: '',
+      aiResult: null
     });
     this.sendToBluetooth("RGB=0,0,0,0");
   },
