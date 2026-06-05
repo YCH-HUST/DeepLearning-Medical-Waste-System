@@ -1079,7 +1079,7 @@ Page({
     });
     this.setData({ isRecognizing: true });
     wx.uploadFile({
-      url: 'http://8.137.77.70:10000/classify',
+      url: 'https://xn--ekru6jq8kvyc.xn--uisx67a1pe.com/classify',
       filePath: filePath,
       name: 'image',
       formData: {},
@@ -1183,6 +1183,10 @@ JSON格式模板：
           { role: 'user', content: query }
         ],
         temperature: 0.1,
+        max_tokens: 300,
+        response_format: {
+          type: "json_object"
+        },
         thinking: {
           type: "disabled"
         }
